@@ -19,7 +19,7 @@ RSpec.describe Question, type: :model do
     it { should_not allow_value(500).for(:level) }
     it { should allow_value(14).for(:level) }
 
-    # --- Вариант решения ДЗ -------------
+    #-----------------------------------------------------
 
     # подсказка: читать доку на метод validate_uniqueness_of, там примеры
     # явно создаем "предмет тестирования" - валидный объект

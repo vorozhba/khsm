@@ -19,4 +19,15 @@ FactoryGirl.define do
     association :game
     association :question
   end
+
+  # отстутствует правильный ответ
+  factory :game_question_bad, class: GameQuestion do
+    a 4
+    b 3
+    c 2
+    d 2
+
+    association :game
+    association :question
+  end
 end

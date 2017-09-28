@@ -11,6 +11,9 @@ RSpec.describe GameQuestion, type: :model do
   let(:game_question) do
     FactoryGirl.create(:game_question, a: 2, b: 1, c: 4, d: 3)
   end
+  let(:game_question_bad) do
+    FactoryGirl.create(:game_question_bad, a: 2, b: 2, c: 4, d: 3)
+  end
 
   # Группа тестов на игровое состояние объекта вопроса
   context 'game status' do
@@ -29,8 +32,14 @@ RSpec.describe GameQuestion, type: :model do
       expect(game_question.answer_correct?('b')).to be_truthy
     end
 
+    it 'correct .correct_answer_key' do
+      expect(game_question.correct_answer_key).to eq 'b'
+    end
 
-    #------ Вариант решения ДЗ --------------------
+    it 'bad .correct_answer_key' do
+      # отстутствие ключа правильного ответа
+      expect(game_question_bad.correct_answer_key).to be_nil
+    end
 
     # тест на наличие методов делегатов level и text
     it 'correct .level & .text delegates' do
