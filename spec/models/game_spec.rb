@@ -124,4 +124,30 @@ RSpec.describe Game, type: :model do
       expect(game_w_questions.status).to eq(:money)
     end
   end
+
+  context '.current_game_question' do
+    it 'returns current question' do
+      level = game_w_questions.current_level
+      q = game_w_questions.game_questions[level]
+      # Возвращает текущий вопрос
+      expect(game_w_questions.current_game_question).to eq(q)
+    end
+
+    it 'returns nil if level is not correct' do
+      game_w_questions.current_level = 16
+      # Возвращает nil
+      expect(game_w_questions.current_game_question).to be_nil
+    end
+  end
+
+  context '.previous_level' do
+    it 'returns previous level 9 on level 10' do
+      game_w_questions.current_level = 10
+      expect(game_w_questions.previous_level).to eq(9)
+    end
+
+    it 'returns -1 on game start' do
+      expect(game_w_questions.previous_level).to eq(- 1)
+    end
+  end
 end
