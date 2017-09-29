@@ -46,6 +46,17 @@ RSpec.describe GamesController, type: :controller do
 
       expect(response.status).not_to eq(200)
       expect(response).to redirect_to(new_user_session_path)
+      expect(flash[:alert]).to be
+    end
+
+    it 'kicked from #take_money' do
+      game = FactoryGirl.create(:game_with_questions)
+
+      put :take_money, id: game.id
+
+      expect(response.status).not_to eq(200)
+      expect(response).to redirect_to(new_user_session_path)
+      expect(flash[:alert]).to be
     end
   end
 
