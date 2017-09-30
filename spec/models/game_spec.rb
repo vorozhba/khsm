@@ -156,18 +156,24 @@ RSpec.describe Game, type: :model do
       game_w_questions.created_at = 1.hour.ago
       letter = game_w_questions.current_game_question.correct_answer_key
       expect(game_w_questions.answer_current_question!(letter)).to be false
+      expect(game_w_questions.status).to eq(:timeout)
+      expect(game_w_questions).to be_finished
     end
 
     it 'returns true if answer is correct' do
       game_w_questions.created_at = Time.now
       letter = game_w_questions.current_game_question.correct_answer_key
       expect(game_w_questions.answer_current_question!(letter)).to be_truthy
+      expect(game_w_questions.status).to eq(:in_progress)
+      expect(game_w_questions).not_to be_finished
     end
 
     it 'returns false if answer is not correct' do
       letter = 'e'
       game_w_questions.created_at = Time.now
       expect(game_w_questions.answer_current_question!(letter)).to be false
+      expect(game_w_questions.status).to eq(:fail)
+      expect(game_w_questions).to be_finished
     end
 
     it 'returns true if question is last & answer is correct' do
@@ -176,6 +182,7 @@ RSpec.describe Game, type: :model do
       letter = game_w_questions.current_game_question.correct_answer_key
       expect(game_w_questions.answer_current_question!(letter)).to be_truthy
       expect(game_w_questions.status).to eq(:won)
+      expect(game_w_questions).to be_finished
     end
   end
 end
