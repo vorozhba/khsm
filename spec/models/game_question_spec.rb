@@ -46,5 +46,72 @@ RSpec.describe GameQuestion, type: :model do
       expect(game_question.text).to eq(game_question.question.text)
       expect(game_question.level).to eq(game_question.question.level)
     end
+
+    it 'correct .help_hash' do
+      # на фабрике у нас изначально хэш пустой
+      expect(game_question.help_hash).to eq({})
+
+      # добавляем пару ключей
+      game_question.help_hash[:some_key1] = 'blabla1'
+      game_question.help_hash['some_key2'] = 'blabla2'
+
+      # сохраняем модель и ожидаем сохранения хорошего
+      expect(game_question.save).to be_truthy
+
+      # загрузим этот же вопрос из базы для чистоты эксперимента
+      gq = GameQuestion.find(game_question.id)
+
+      # проверяем новые значение хэша
+      expect(gq.help_hash).to eq({some_key1: 'blabla1', 'some_key2' => 'blabla2'})
+    end
+
+  end
+
+  # help_hash у нас имеет такой формат:
+  # {
+  #   fifty_fifty: ['a', 'b'], # При использовании подсказски остались варианты a и b
+  #   audience_help: {'a' => 42, 'c' => 37 ...}, # Распределение голосов по вариантам a, b, c, d
+  #   friend_call: 'Василий Петрович считает, что правильный ответ A'
+  # }
+  #
+
+  # Группа тестов на помощь игроку
+  context 'user helpers' do
+    # проверяем работоспосбность "помощи зала"
+    it 'correct audience_help' do
+      # сначала убедимся, в подсказках пока нет нужного ключа
+      expect(game_question.help_hash).not_to include(:audience_help)
+      # вызовем подсказку
+      game_question.add_audience_help
+
+      # проверим создание подсказки
+      expect(game_question.help_hash).to include(:audience_help)
+
+      # мы не можем знать распределение, но может проверить хотя бы наличие нужных ключей
+      ah = game_question.help_hash[:audience_help]
+      expect(ah.keys).to contain_exactly('a', 'b', 'c', 'd')
+    end
+
+
+    # ---------------------------------------------
+
+    # проверяем работу 50/50
+    it 'correct fifty_fifty' do
+      # сначала убедимся, в подсказках пока нет нужного ключа
+      expect(game_question.help_hash).not_to include(:fifty_fifty)
+      # вызовем подсказку
+      game_question.add_fifty_fifty
+
+      # проверим создание подсказки
+      expect(game_question.help_hash).to include(:fifty_fifty)
+      ff = game_question.help_hash[:fifty_fifty]
+
+      expect(ff).to include('b') # должен остаться правильный вариант
+      expect(ff.size).to eq 2 # всего должно остаться 2 варианта
+    end
+
+    # Дополнительно напишите тесты на случай использования одновременно 2 и более подсказок
+    # После использования 50/50 например, аудитория и друг должны выбирать только
+    # из 2 оставшихся вариантов и т. п.
   end
 end
