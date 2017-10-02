@@ -113,5 +113,60 @@ RSpec.describe GameQuestion, type: :model do
     # Дополнительно напишите тесты на случай использования одновременно 2 и более подсказок
     # После использования 50/50 например, аудитория и друг должны выбирать только
     # из 2 оставшихся вариантов и т. п.
+
+    it 'fifty_fifty & friend_call' do
+      expect(game_question.help_hash).not_to include(:fifty_fifty)
+      expect(game_question.send(:keys_to_use_in_help).size).to eq 4
+
+      game_question.add_fifty_fifty
+      expect(game_question.help_hash).to include(:fifty_fifty)
+      ff = game_question.help_hash[:fifty_fifty]
+      expect(ff).to include('b')
+      expect(ff.size).to eq 2
+
+      expect(game_question.help_hash).not_to include(:friend_call)
+      expect(game_question.send(:keys_to_use_in_help).size).to eq 2
+
+      game_question.add_friend_call
+      expect(game_question.help_hash).to include(:fifty_fifty)
+      expect(game_question.help_hash).to include(:friend_call)
+      frc = game_question.help_hash[:friend_call]
+      expect(frc).to include('считает, что это вариант')
+    end
+
+    it 'all helpers' do
+      expect(game_question.help_hash).not_to include(:fifty_fifty)
+      expect(game_question.help_hash).not_to include(:friend_call)
+      expect(game_question.help_hash).not_to include(:audience_help)
+      expect(game_question.send(:keys_to_use_in_help).size).to eq 4
+
+      game_question.add_fifty_fifty
+      expect(game_question.help_hash).to include(:fifty_fifty)
+      ff = game_question.help_hash[:fifty_fifty]
+      expect(ff).to include('b')
+      expect(ff.size).to eq 2
+
+      expect(game_question.help_hash).not_to include(:friend_call)
+      expect(game_question.help_hash).not_to include(:audience_help)
+      expect(game_question.send(:keys_to_use_in_help).size).to eq 2
+
+      game_question.add_friend_call
+      expect(game_question.help_hash).to include(:fifty_fifty)
+      expect(game_question.help_hash).to include(:friend_call)
+      expect(game_question.help_hash).not_to include(:audience_help)
+      frc = game_question.help_hash[:friend_call]
+      expect(frc).to include('считает, что это вариант')
+
+      expect(game_question.send(:keys_to_use_in_help).size).to eq 2
+
+      game_question.add_audience_help
+      expect(game_question.help_hash).to include(:fifty_fifty)
+      expect(game_question.help_hash).to include(:friend_call)
+      expect(game_question.help_hash).to include(:audience_help)
+      ah = game_question.help_hash[:audience_help]
+      expect(ah).to include('b')
+    end
+
+
   end
 end
