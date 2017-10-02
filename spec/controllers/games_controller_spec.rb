@@ -103,8 +103,23 @@ RSpec.describe GamesController, type: :controller do
       expect(response).to redirect_to(game_path(game))
       expect(flash.empty?).to be_truthy # удачный ответ не заполняет flash
     end
-    
+
     #----------------------------------------------------------------------
+
+    # неправильный ответ игрока
+    it 'answers incorrectly' do
+      # вручную проставялем 0 уровень
+      game_w_questions.update_attribute(:current_level, 0)
+      put :answer, id: game_w_questions.id, letter: 'e'
+      game = assigns(:game)
+
+      expect(flash[:alert]).to be
+      expect(game.current_game_question.correct_answer).to be
+      # выигрыш - 0
+      expect(game.prize).to eq(0)
+      expect(game.finished?).to be_truthy
+      expect(response).to redirect_to(user_path(user))
+    end
 
     # проверка, что пользовтеля посылают из чужой игры
     it '#show alien game' do
