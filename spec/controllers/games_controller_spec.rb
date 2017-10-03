@@ -114,6 +114,7 @@ RSpec.describe GamesController, type: :controller do
       game = assigns(:game)
 
       expect(flash[:alert]).to be
+      expect(flash[:alert]).to include("Правильный ответ:")
       expect(game.current_game_question.correct_answer).to be
       # выигрыш - 0
       expect(game.prize).to eq(0)
