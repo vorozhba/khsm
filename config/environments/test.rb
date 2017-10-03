@@ -39,10 +39,10 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
-end
 
-#
-# Можно завести поле статус в модели и хранить там явно нужное значение,
-# ориентироваться на него, вместо динамического вычисления статуса.
-# Главное при этом правильно его сохранять.
-#
+  # Настраиваем отдавание статических файлов для тестов
+  config.serve_static_files = true
+  config.assets.debug = true
+  config.asset_host   = 'http://localhost:3000'
+  config.static_cache_control = 'public, max-age=3600'
+end
