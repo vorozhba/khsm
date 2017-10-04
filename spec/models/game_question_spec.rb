@@ -114,6 +114,16 @@ RSpec.describe GameQuestion, type: :model do
     # После использования 50/50 например, аудитория и друг должны выбирать только
     # из 2 оставшихся вариантов и т. п.
 
+    it 'friend_call' do
+      expect(game_question.help_hash).not_to include(:friend_call)
+      expect(game_question.send(:keys_to_use_in_help).size).to eq 4
+
+      game_question.add_friend_call
+      expect(game_question.help_hash).to include(:friend_call)
+      frc = game_question.help_hash[:friend_call]
+      expect(frc).to include('считает, что это вариант')
+    end
+
     it 'fifty_fifty & friend_call' do
       expect(game_question.help_hash).not_to include(:fifty_fifty)
       expect(game_question.send(:keys_to_use_in_help).size).to eq 4
