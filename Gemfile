@@ -30,4 +30,5 @@ end
 group :test do
   gem 'capybara'
   gem 'launchy'
+  gem 'rubocop', require: false
 end
