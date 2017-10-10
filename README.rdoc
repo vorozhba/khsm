@@ -4,6 +4,6 @@
 
 Учебное приложение курса по Ruby on Rails от «Хорошего программиста». В продакшене настроено на работу с Heroku.
 
-Веб-сайт игры: https://million-rubles.herokuapp.com
+Веб-сайт игры: http://billionaire.corn4corn.ru
 
 © http://goodprogrammer.ru
